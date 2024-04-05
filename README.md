@@ -129,6 +129,14 @@ To get a local copy up and running follow these simple example steps. This appli
 ## Usage
 
 1.  To compile the project using the `makefile` simply execute the `make` command with no parameters at the root of the project.
+2.  Execute `./main.exe`
+
+```sh
+-p [path_to_paintings_directory]
+-a [true]
+```
+
+3.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

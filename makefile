@@ -18,7 +18,7 @@ OBJDIR = ./obj
 INCDIR = ./include
 
 # Target exe
-TARGET = $(BINDIR)/augment_reality
+TARGET = $(BINDIR)/main
 
 # Source files
 SRCS = $(wildcard $(SRCDIR)/*.cpp)
