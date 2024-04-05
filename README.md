@@ -21,7 +21,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
-  <a href="https://github.com/github_username/repo_name">
+  <a href="https://github.com/Kevin-Heleodoro/Augmented-Museum">
     <img src="img/logo.png" alt="Logo" width="80" height="80">
   </a>
 
@@ -30,14 +30,14 @@
   <p align="center">
     Augmented Reality application to display paintings on a surface.
     <br />
-    <!-- <a href="https://github.com/github_username/repo_name"><strong>Explore the docs »</strong></a>
+    <!-- <a href="https://github.com/Kevin-Heleodoro/Augmented-Museum"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/github_username/repo_name">View Demo</a>
+    <a href="https://github.com/Kevin-Heleodoro/Augmented-Museum">View Demo</a>
     ·
-    <a href="https://github.com/github_username/repo_name/issues">Report Bug</a>
+    <a href="https://github.com/Kevin-Heleodoro/Augmented-Museum/issues">Report Bug</a>
     ·
-    <a href="https://github.com/github_username/repo_name/issues">Request Feature</a> -->
+    <a href="https://github.com/Kevin-Heleodoro/Augmented-Museum/issues">Request Feature</a> -->
   </p>
 </div>
 
@@ -71,22 +71,22 @@
 
 ## About The Project
 
-[![Product Name Screen Shot][product-screenshot]](https://example.com)
+<!-- [![Product Name Screen Shot][product-screenshot]](https://example.com) -->
 
-Here's a blank template to get started: To avoid retyping too much info. Do a search and replace with your text editor for the following: `github_username`, `repo_name`, `twitter_handle`, `linkedin_username`, `email_client`, `email`, `project_title`, `project_description`
+<!-- Here's a blank template to get started: To avoid retyping too much info. Do a search and replace with your text editor for the following: `Kevin-Heleodoro`, `Augmented-Museum`, `@Golden_Sun_Kev`, `Kevin-Heleodoro`, `gmail.com`, `kevin.heleodoro`, `Augmented Museum`, `Augmented Reality to overlay paintings on a surface, creating a virtual museum out of any space.` -->
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ### Built With
 
--   [![Next][Next.js]][Next-url]
+<!-- -   [![Next][Next.js]][Next-url]
 -   [![React][React.js]][React-url]
 -   [![Vue][Vue.js]][Vue-url]
 -   [![Angular][Angular.io]][Angular-url]
 -   [![Svelte][Svelte.dev]][Svelte-url]
 -   [![Laravel][Laravel.com]][Laravel-url]
 -   [![Bootstrap][Bootstrap.com]][Bootstrap-url]
--   [![JQuery][JQuery.com]][JQuery-url]
+-   [![JQuery][JQuery.com]][JQuery-url] -->
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -101,19 +101,20 @@ To get a local copy up and running follow these simple example steps. This appli
 -   [ ] Make
 -   [ ] OpenCV
 
-<!-- -   npm
-    ```sh
-    npm install npm@latest -g
-    ``` -->
+<!-- Give references to install Make and OpenCV -->
 
 ### Installation
-
-<!-- 1. Get a free API Key at [https://example.com](https://example.com) -->
 
 1. Clone the repo
 
 ```sh
-git clone https://github.com/github_username/repo_name.git
+git clone https://github.com/Kevin-Heleodoro/Augmented-Museum.git
+```
+
+2. Run Make from the root directory
+
+```sh
+make
 ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -123,7 +124,7 @@ git clone https://github.com/github_username/repo_name.git
 ## Usage
 
 1.  To compile the project using the `makefile` simply execute the `make` command with no parameters at the root of the project.
-2.  Execute `./main.exe`
+2.  To run the program execute `./main.exe`
 
 ```sh
 -p [path_to_paintings_directory]
@@ -143,7 +144,7 @@ git clone https://github.com/github_username/repo_name.git
 -   [ ] Feature 3
     -   [ ] Nested Feature
 
-See the [open issues](https://github.com/github_username/repo_name/issues) for a full list of proposed features (and known issues). -->
+See the [open issues](https://github.com/Kevin-Heleodoro/Augmented-Museum/issues) for a full list of proposed features (and known issues). -->
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -176,9 +177,9 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 ## Contact
 
-<!-- Your Name - [@twitter_handle](https://twitter.com/twitter_handle) - email@email_client.com
+<!-- Your Name - [@@Golden_Sun_Kev](https://twitter.com/@Golden_Sun_Kev) - kevin.heleodoro@gmail.com.com
 
-Project Link: [https://github.com/github_username/repo_name](https://github.com/github_username/repo_name) -->
+Project Link: [https://github.com/Kevin-Heleodoro/Augmented-Museum](https://github.com/Kevin-Heleodoro/Augmented-Museum) -->
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -195,18 +196,18 @@ Project Link: [https://github.com/github_username/repo_name](https://github.com/
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 
-[contributors-shield]: https://img.shields.io/github/contributors/github_username/repo_name.svg?style=for-the-badge
-[contributors-url]: https://github.com/github_username/repo_name/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/github_username/repo_name.svg?style=for-the-badge
-[forks-url]: https://github.com/github_username/repo_name/network/members
-[stars-shield]: https://img.shields.io/github/stars/github_username/repo_name.svg?style=for-the-badge
-[stars-url]: https://github.com/github_username/repo_name/stargazers
-[issues-shield]: https://img.shields.io/github/issues/github_username/repo_name.svg?style=for-the-badge
-[issues-url]: https://github.com/github_username/repo_name/issues
-[license-shield]: https://img.shields.io/github/license/github_username/repo_name.svg?style=for-the-badge
-[license-url]: https://github.com/github_username/repo_name/blob/master/LICENSE.txt
+[contributors-shield]: https://img.shields.io/github/contributors/Kevin-Heleodoro/Augmented-Museum.svg?style=for-the-badge
+[contributors-url]: https://github.com/Kevin-Heleodoro/Augmented-Museum/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/Kevin-Heleodoro/Augmented-Museum.svg?style=for-the-badge
+[forks-url]: https://github.com/Kevin-Heleodoro/Augmented-Museum/network/members
+[stars-shield]: https://img.shields.io/github/stars/Kevin-Heleodoro/Augmented-Museum.svg?style=for-the-badge
+[stars-url]: https://github.com/Kevin-Heleodoro/Augmented-Museum/stargazers
+[issues-shield]: https://img.shields.io/github/issues/Kevin-Heleodoro/Augmented-Museum.svg?style=for-the-badge
+[issues-url]: https://github.com/Kevin-Heleodoro/Augmented-Museum/issues
+[license-shield]: https://img.shields.io/github/license/Kevin-Heleodoro/Augmented-Museum.svg?style=for-the-badge
+[license-url]: https://github.com/Kevin-Heleodoro/Augmented-Museum/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
-[linkedin-url]: https://linkedin.com/in/linkedin_username
+[linkedin-url]: https://linkedin.com/in/Kevin-Heleodoro
 [product-screenshot]: images/screenshot.png
 [Next.js]: https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white
 [Next-url]: https://nextjs.org/
