@@ -11,12 +11,12 @@
 *** https://www.markdownguide.org/basic-syntax/#reference-style-links
 -->
 
-[![Contributors][contributors-shield]][contributors-url]
+<!-- [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
 [![MIT License][license-shield]][license-url]
-[![LinkedIn][linkedin-shield]][linkedin-url]
+[![LinkedIn][linkedin-shield]][linkedin-url] -->
 
 <!-- PROJECT LOGO -->
 <br />
@@ -28,16 +28,16 @@
 <h3 align="center">Augmented Museum</h3>
 
   <p align="center">
-    project_description
+    Augmented Reality application to display paintings on a surface.
     <br />
-    <a href="https://github.com/github_username/repo_name"><strong>Explore the docs »</strong></a>
+    <!-- <a href="https://github.com/github_username/repo_name"><strong>Explore the docs »</strong></a>
     <br />
     <br />
     <a href="https://github.com/github_username/repo_name">View Demo</a>
     ·
     <a href="https://github.com/github_username/repo_name/issues">Report Bug</a>
     ·
-    <a href="https://github.com/github_username/repo_name/issues">Request Feature</a>
+    <a href="https://github.com/github_username/repo_name/issues">Request Feature</a> -->
   </p>
 </div>
 
@@ -98,7 +98,7 @@ To get a local copy up and running follow these simple example steps. This appli
 
 ### Prerequisites
 
--   [ ] MAKE
+-   [ ] Make
 -   [ ] OpenCV
 
 <!-- -   npm
@@ -108,19 +108,13 @@ To get a local copy up and running follow these simple example steps. This appli
 
 ### Installation
 
-1. Get a free API Key at [https://example.com](https://example.com)
-2. Clone the repo
-    ```sh
-    git clone https://github.com/github_username/repo_name.git
-    ```
-3. Install NPM packages
-    ```sh
-    npm install
-    ```
-4. Enter your API in `config.js`
-    ```js
-    const API_KEY = 'ENTER YOUR API';
-    ```
+<!-- 1. Get a free API Key at [https://example.com](https://example.com) -->
+
+1. Clone the repo
+
+```sh
+git clone https://github.com/github_username/repo_name.git
+```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -133,7 +127,7 @@ To get a local copy up and running follow these simple example steps. This appli
 
 ```sh
 -p [path_to_paintings_directory]
--a [true]
+-a
 ```
 
 3.
@@ -144,12 +138,12 @@ To get a local copy up and running follow these simple example steps. This appli
 
 ## Roadmap
 
--   [ ] Feature 1
+<!-- -   [ ] Feature 1
 -   [ ] Feature 2
 -   [ ] Feature 3
     -   [ ] Nested Feature
 
-See the [open issues](https://github.com/github_username/repo_name/issues) for a full list of proposed features (and known issues).
+See the [open issues](https://github.com/github_username/repo_name/issues) for a full list of proposed features (and known issues). -->
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -157,7 +151,7 @@ See the [open issues](https://github.com/github_username/repo_name/issues) for a
 
 ## Contributing
 
-Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+<!-- Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
 If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
 Don't forget to give the project a star! Thanks again!
@@ -166,7 +160,7 @@ Don't forget to give the project a star! Thanks again!
 2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
 3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+5. Open a Pull Request -->
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -182,9 +176,9 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 ## Contact
 
-Your Name - [@twitter_handle](https://twitter.com/twitter_handle) - email@email_client.com
+<!-- Your Name - [@twitter_handle](https://twitter.com/twitter_handle) - email@email_client.com
 
-Project Link: [https://github.com/github_username/repo_name](https://github.com/github_username/repo_name)
+Project Link: [https://github.com/github_username/repo_name](https://github.com/github_username/repo_name) -->
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
