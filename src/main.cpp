@@ -8,25 +8,14 @@
 #include <opencv2/aruco.hpp>
 #include <opencv2/opencv.hpp>
 
+#include "../include/ar_utils.h"
 #include "../include/cmdparser.hpp"
-#include "../include/utils.h"
 
 using namespace std;
 using namespace cv;
 
 Mat camMatrix, dCoeffs;
 vector<Mat> rotationVectors, translationVectors;
-
-/**
- * @brief prints out a border in the terminal to separate output sections
- */
-void
-printBorder()
-{
-  cout << "\n" << endl;
-  cout << "-----------------------------------------------------" << endl;
-  cout << "\n" << endl;
-}
 
 /**
  * @brief Configures the parameters being passed in through the command line.
@@ -51,63 +40,84 @@ configureParser(cli::Parser& parser)
 }
 
 /**
- * @brief loads the camera parameters found in filePath to calibrate the camera
+ * @brief Overlay a painting onto an ArUco marker
  */
 void
-loadCalibrationFile(string filePath)
+overlayImage(const Mat& src,
+             Mat& dest,
+             const Mat& overlay,
+             const vector<Point2f>& points,
+             const Size& overlaySize)
 {
-  cout << "Calibrating camera..." << endl;
-  FileStorage fs;
-
-  try {
-    fs.open(filePath, FileStorage::READ);
-  } catch (const Exception& e) {
-    cerr << "Failed to open calibration file: " << e.what() << endl;
-    return;
+  // Center of ArUco Marker
+  Point2f markerCenter = Point2f(0.f, 0.f);
+  for (const auto& point : points) {
+    cout << "adding " << point << "to markerCenter " << markerCenter << endl;
+    markerCenter += point;
   }
+  markerCenter *= (1.f / points.size());
+  cout << "markerCenter: " << markerCenter << endl;
 
-  fs["camera_matrix"] >> camMatrix;
-  fs["dist_coeffs"] >> dCoeffs;
+  // Define points where corners of overlay image should be placed after
+  // transform.
+  vector<Point2f> overlayPoints;
+  overlayPoints.push_back(Point2f(markerCenter.x - overlaySize.width / 2.f,
+                                  markerCenter.y - overlaySize.height / 2.f));
+  overlayPoints.push_back(Point2f(markerCenter.x + overlaySize.width / 2.f,
+                                  markerCenter.y - overlaySize.height / 2.f));
+  overlayPoints.push_back(Point2f(markerCenter.x + overlaySize.width / 2.f,
+                                  markerCenter.y + overlaySize.height / 2.f));
+  overlayPoints.push_back(Point2f(markerCenter.x - overlaySize.width / 2.f,
+                                  markerCenter.y + overlaySize.height / 2.f));
+  // cout << "Overlay points: " << overlayPoints << endl;
 
-  rotationVectors.clear();
-  FileNode rvecNode = fs["rotation_vectors"];
-  for (FileNodeIterator n = rvecNode.begin(); n != rvecNode.end(); ++n) {
-    Mat tmp;
-    *n >> tmp;
-    rotationVectors.push_back(tmp);
+  // Source corners for overlay image itself
+  vector<Point2f> sourcePoints;
+  sourcePoints.push_back(Point2f(0, 0));
+  sourcePoints.push_back(Point2f(overlay.cols, 0));
+  sourcePoints.push_back(Point2f(overlay.cols, overlay.rows));
+  sourcePoints.push_back(Point2f(0, overlay.rows));
+
+  // Homography matrix
+  Mat homography = getPerspectiveTransform(sourcePoints, overlayPoints);
+
+  // cout << "Overlay points size: " << overlayPoints.size() << endl;
+  // cout << "Points size: " << points.size() << endl;
+
+  // Wrap overlay to fit video feed
+  Mat warpedOverlay;
+  warpPerspective(overlay, warpedOverlay, homography, dest.size());
+
+  // Mask for overlay image
+  Mat overlayMask = Mat::zeros(dest.size(), CV_8UC1);
+  vector<Point> overlayPolygon;
+
+  // fillConvexPoly is expecting Point type of CV_32S
+  for (const Point2f& p : overlayPoints) {
+    overlayPolygon.push_back(
+      Point(static_cast<int>(p.x), static_cast<int>(p.y)));
   }
+  fillConvexPoly(overlayMask, overlayPolygon, Scalar(255));
+  // cout << "overlayMask " << overlayMask.size() << endl;
+  // cout << "overlayPoints " << overlayPoints << endl;
 
-  fs.release();
+  // Invert mask for background
+  Mat backgroundMask;
+  bitwise_not(overlayMask, backgroundMask);
 
-  cout << "Loading Parameters" << endl;
-  cout << "Camera Matrix: " << camMatrix << endl;
-  cout << "Distortion Coefficients: " << dCoeffs << endl;
-  cout << "Rotation Vectors: " << rotationVectors.size() << endl;
-  cout << "Translation Vectors: " << translationVectors.size() << endl;
-  cout << "Finished loading ..." << endl;
+  // Prepare background and overlay for merge
+  Mat background;
+  src.copyTo(background, backgroundMask);
+  warpedOverlay.copyTo(warpedOverlay, overlayMask);
+
+  // Merge background and overlay
+  add(background, warpedOverlay, dest);
 }
 
-/**
- * @brief Creates a new Aruco marker and saves it to a file
- */
 void
-createArucoMarker(int markerId)
+detectArucoMarker(Mat& src, Mat& dest, Mat& overlay, Mat& objPoints)
 {
-  cout << "Creating new Aruco marker..." << endl;
-  Mat markerImage;
-  aruco::Dictionary arucoDict =
-    aruco::getPredefinedDictionary(aruco::DICT_6X6_250);
   int markerSize = 200;
-  int borderBits = 1;
-  aruco::generateImageMarker(
-    arucoDict, markerId, markerSize, markerImage, borderBits);
-  string filename = "aruco_marker_" + to_string(markerId) + ".png";
-  imwrite(filename, markerImage);
-}
-
-void
-detectArucoMarker(Mat& src, Mat& dest, Mat& overlay)
-{
   aruco::Dictionary dictionary =
     aruco::getPredefinedDictionary(aruco::DICT_6X6_250);
 
@@ -117,14 +127,27 @@ detectArucoMarker(Mat& src, Mat& dest, Mat& overlay)
   aruco::ArucoDetector detector(dictionary, detectorParams);
 
   detector.detectMarkers(src, markerCorners, markerIds);
-
-  // cout << "markerCorners: " << markerCorners.size() << endl;
+  size_t nMarkers = markerCorners.size();
+  vector<Vec3d> rvecs(nMarkers), tvecs(nMarkers);
 
   if (!markerIds.empty()) {
-    aruco::drawDetectedMarkers(dest, markerCorners, markerIds);
-    vector<Vec3d> rvecs, tvecs;
 
-    // solvePnP()
+    for (size_t i = 0; i < nMarkers; i++) {
+      solvePnP(objPoints,
+               markerCorners.at(i),
+               camMatrix,
+               dCoeffs,
+               rvecs.at(i),
+               tvecs.at(i));
+    }
+    aruco::drawDetectedMarkers(dest, markerCorners, markerIds);
+
+    for (unsigned int i = 0; i < markerIds.size(); i++) {
+      drawFrameAxes(
+        dest, camMatrix, dCoeffs, rvecs[i], tvecs[i], markerSize * 1.5f, 2);
+      Size overlaySize(markerCorners[i][0].x * 2, markerCorners[i][0].y * 2);
+      // overlayImage(src, dest, overlay, markerCorners[i], overlaySize);
+    }
   }
 }
 
@@ -135,7 +158,7 @@ detectArucoMarker(Mat& src, Mat& dest, Mat& overlay)
 int
 main(int argc, char* argv[])
 {
-  printBorder();
+  ar_utils::printBorder();
   cout << "Welcome to the Augmented Reality application!" << endl;
 
   cli::Parser parser(argc, argv);
@@ -143,7 +166,7 @@ main(int argc, char* argv[])
   parser.run_and_exit_if_error();
 
   cout << "Command line arguments successfully parsed..." << endl;
-  printBorder();
+  ar_utils::printBorder();
 
   auto path = parser.get<string>("p");
   cout << "Path to images: " << path << endl;
@@ -154,12 +177,13 @@ main(int argc, char* argv[])
     return -1;
   }
 
-  printBorder();
+  ar_utils::printBorder();
   auto calibrationFile = parser.get<string>("c");
   cout << "Utilizing calibration file found at " << calibrationFile << endl;
 
   try {
-    loadCalibrationFile(calibrationFile);
+    ar_utils::loadCalibrationFile(
+      calibrationFile, camMatrix, dCoeffs, rotationVectors, translationVectors);
   } catch (const Exception& e) {
     cerr << "Error loading calibration file: " << e.what() << endl;
     return -1;
@@ -168,21 +192,22 @@ main(int argc, char* argv[])
   auto printMarker = parser.get<bool>("a");
   if (printMarker) {
     int random = 1 + (rand() % 250);
-    cout << "Creating ArUco marker ID: " << random << endl;
-    createArucoMarker(random);
+    ar_utils::createArucoMarker(random);
   }
 
   namedWindow("Main Window", WINDOW_AUTOSIZE);
 
-  Mat overlay;
+  Mat overlay, image;
   try {
-    overlay = cv::imread("bin/paintings/image_1.jpg");
+    image = cv::imread("bin/paintings/image_1.jpg");
+    cout << "Overlay size: " << image.size() << endl;
+    double aspectRatio = (double)200 / image.cols;
+    resize(image, overlay, Size(), aspectRatio, aspectRatio, INTER_LINEAR);
+    cout << "Overlay resized: " << overlay.size() << endl;
   } catch (const Exception& e) {
     cerr << e.what() << endl;
     return -1;
   }
-
-  Mat frame, frameCopy;
 
   // set coordinate system
   int markerLength = 200;
@@ -195,22 +220,31 @@ main(int argc, char* argv[])
   objPoints.ptr<Vec3f>(0)[3] =
     Vec3f(-markerLength / 2.f, -markerLength / 2.f, 0);
 
-  while (true) {
-    cap >> frame;
+  ar_utils::printBorder();
+
+  // while (true) {
+  while (cap.grab()) {
+    Mat frame, frameCopy;
+    cap.retrieve(frame);
+    // cap >> frame;
     frame.copyTo(frameCopy);
 
-    detectArucoMarker(frame, frameCopy, overlay);
+    detectArucoMarker(frame, frameCopy, overlay, objPoints);
 
     imshow("Main Window", frameCopy);
 
     char key = (char)waitKey(10);
     if (key == 'q') {
-      printBorder();
+      ar_utils::printBorder();
       cout << "User terminated program" << endl;
       break;
     }
+    if (key == 's') {
+      ar_utils::printBorder();
+      ar_utils::screenshot(frameCopy);
+    }
   }
 
-  printBorder();
+  ar_utils::printBorder();
   return 0;
 }

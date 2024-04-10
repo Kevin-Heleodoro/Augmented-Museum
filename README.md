@@ -94,12 +94,14 @@
 
 ## Getting Started
 
-To get a local copy up and running follow these simple example steps. This application was built and tested on a Mac OS using g++ and Make to compile the code.
+To get a local copy up and running follow these simple example steps. This application was built and tested on a Mac OS using Python 3.11.
+
+<!-- To get a local copy up and running follow these simple example steps. This application was built and tested on a Mac OS using g++ and Make to compile the code. -->
 
 ### Prerequisites
 
--   [ ] Make
--   [ ] OpenCV
+<!-- -   [ ] Make
+-   [ ] OpenCV -->
 
 <!-- Give references to install Make and OpenCV -->
 
@@ -127,8 +129,23 @@ make
 2.  To run the program execute `./main.exe`
 
 ```sh
--p [path_to_paintings_directory]
--a
+Available parameters:
+
+  -h	--help
+
+   This parameter is optional. The default value is ''.
+
+  -p	--path
+   Set path for directory containing images. Defaults to ./paintings directory which contains a handful of assorted artworks.
+   This parameter is optional. The default value is './paintings'.
+
+  -c	--calibration
+   Path to camera calibration file
+   This parameter is optional. The default value is 'bin/calibration.xml'.
+
+  -a	--aruco
+   If true, creates an ArUco marker and saves it
+   This parameter is optional. The default value is '0'.
 ```
 
 3.
@@ -139,8 +156,17 @@ make
 
 ## Roadmap
 
-<!-- -   [ ] Feature 1
--   [ ] Feature 2
+-   [x] ArUco Marker detection
+
+-   ArUco markers can be detected by the application. Pose estimation calculated and frame axes drawn on the center of the marker.
+    ![](img/README/aruco_detected_1.png)
+
+-   [ ] Placing image over ArUco Marker
+
+-   Test image can be placed over ArUco marker. However the image sizing needs to be adjusted. The left border also sticks to the edge of the frame.
+    ![](img/README/overlay_aruco_1.png)
+
+<!-- -   [ ] Feature 2
 -   [ ] Feature 3
     -   [ ] Nested Feature
 
@@ -189,7 +215,7 @@ Project Link: [https://github.com/Kevin-Heleodoro/Augmented-Museum](https://gith
 
 -   [Best Artwork of All Time Dataset](https://www.kaggle.com/datasets/ikarus777/best-artworks-of-all-time?resource=download-directory&select=resized)
 -   [CmdParser Library](https://github.com/FlorianRappl/CmdParser)
--   []()
+-   [Blender](https://www.blender.org/features/)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
