@@ -11,12 +11,12 @@
 *** https://www.markdownguide.org/basic-syntax/#reference-style-links
 -->
 
-<!-- [![Contributors][contributors-shield]][contributors-url]
+[![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
 [![Issues][issues-shield]][issues-url]
 [![MIT License][license-shield]][license-url]
-[![LinkedIn][linkedin-shield]][linkedin-url] -->
+[![LinkedIn][linkedin-shield]][linkedin-url]
 
 <!-- PROJECT LOGO -->
 <br />
@@ -30,14 +30,14 @@
   <p align="center">
     Augmented Reality application to display paintings on a surface.
     <br />
-    <!-- <a href="https://github.com/Kevin-Heleodoro/Augmented-Museum"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/Kevin-Heleodoro/Augmented-Museum"><strong>Explore the docs »</strong></a>
     <br />
     <br />
     <a href="https://github.com/Kevin-Heleodoro/Augmented-Museum">View Demo</a>
     ·
     <a href="https://github.com/Kevin-Heleodoro/Augmented-Museum/issues">Report Bug</a>
     ·
-    <a href="https://github.com/Kevin-Heleodoro/Augmented-Museum/issues">Request Feature</a> -->
+    <a href="https://github.com/Kevin-Heleodoro/Augmented-Museum/issues">Request Feature</a>
   </p>
 </div>
 
@@ -73,7 +73,7 @@
 
 <!-- [![Product Name Screen Shot][product-screenshot]](https://example.com) -->
 
-<!-- Here's a blank template to get started: To avoid retyping too much info. Do a search and replace with your text editor for the following: `Kevin-Heleodoro`, `Augmented-Museum`, `@Golden_Sun_Kev`, `Kevin-Heleodoro`, `gmail.com`, `kevin.heleodoro`, `Augmented Museum`, `Augmented Reality to overlay paintings on a surface, creating a virtual museum out of any space.` -->
+The idea of this project is to give a user the ability to create a virtual museum in whatever physical space they have (home, office, etc.). The goal is to create framed paintings/photos to be "hung" on a wall as one would normally do.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -94,14 +94,12 @@
 
 ## Getting Started
 
-To get a local copy up and running follow these simple example steps. This application was built and tested on a Mac OS using Python 3.11.
-
-<!-- To get a local copy up and running follow these simple example steps. This application was built and tested on a Mac OS using g++ and Make to compile the code. -->
+To get a local copy up and running follow these simple example steps. This application was built and tested on a Mac OS using g++ and Make to compile the code.
 
 ### Prerequisites
 
-<!-- -   [ ] Make
--   [ ] OpenCV -->
+-   [ ] Make
+-   [ ] OpenCV
 
 <!-- Give references to install Make and OpenCV -->
 
@@ -166,9 +164,8 @@ Available parameters:
 -   Test image can be placed over ArUco marker. However the image sizing needs to be adjusted. The left border also sticks to the edge of the frame.
     ![](img/README/overlay_aruco_1.png)
 
-<!-- -   [ ] Feature 2
--   [ ] Feature 3
-    -   [ ] Nested Feature
+-   I was incorrectly calculating new marker corners instead of using the known marker corners that were gathered during detection. Overlay image now covers ArUco marker and rotates/translates along with it.
+    ![](img/README/overlay_aruco_2.png)
 
 See the [open issues](https://github.com/Kevin-Heleodoro/Augmented-Museum/issues) for a full list of proposed features (and known issues). -->
 
@@ -178,7 +175,7 @@ See the [open issues](https://github.com/Kevin-Heleodoro/Augmented-Museum/issues
 
 ## Contributing
 
-<!-- Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
 If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
 Don't forget to give the project a star! Thanks again!
@@ -187,7 +184,7 @@ Don't forget to give the project a star! Thanks again!
 2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
 3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request -->
+5. Open a Pull Request
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -195,7 +192,9 @@ Don't forget to give the project a star! Thanks again!
 
 ## License
 
-Distributed under the MIT License. See `LICENSE.txt` for more information.
+Distributed under the MIT License.
+
+<!-- See `LICENSE.txt` for more information. -->
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -203,9 +202,9 @@ Distributed under the MIT License. See `LICENSE.txt` for more information.
 
 ## Contact
 
-<!-- Your Name - [@@Golden_Sun_Kev](https://twitter.com/@Golden_Sun_Kev) - kevin.heleodoro@gmail.com.com
+Your Name - [@Golden_Sun_Kev](https://twitter.com/@Golden_Sun_Kev) - kevin.heleodoro@gmail.com
 
-Project Link: [https://github.com/Kevin-Heleodoro/Augmented-Museum](https://github.com/Kevin-Heleodoro/Augmented-Museum) -->
+Project Link: [https://github.com/Kevin-Heleodoro/Augmented-Museum](https://github.com/Kevin-Heleodoro/Augmented-Museum)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -215,7 +214,7 @@ Project Link: [https://github.com/Kevin-Heleodoro/Augmented-Museum](https://gith
 
 -   [Best Artwork of All Time Dataset](https://www.kaggle.com/datasets/ikarus777/best-artworks-of-all-time?resource=download-directory&select=resized)
 -   [CmdParser Library](https://github.com/FlorianRappl/CmdParser)
--   [Blender](https://www.blender.org/features/)
+<!-- -   [Blender](https://www.blender.org/features/) -->
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 

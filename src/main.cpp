@@ -51,25 +51,31 @@ overlayImage(const Mat& src,
 {
   // Center of ArUco Marker
   Point2f markerCenter = Point2f(0.f, 0.f);
+  vector<Point2f> overlayPoints;
   for (const auto& point : points) {
     cout << "adding " << point << "to markerCenter " << markerCenter << endl;
     markerCenter += point;
+    overlayPoints.push_back(point);
   }
   markerCenter *= (1.f / points.size());
   cout << "markerCenter: " << markerCenter << endl;
 
   // Define points where corners of overlay image should be placed after
   // transform.
-  vector<Point2f> overlayPoints;
-  overlayPoints.push_back(Point2f(markerCenter.x - overlaySize.width / 2.f,
-                                  markerCenter.y - overlaySize.height / 2.f));
-  overlayPoints.push_back(Point2f(markerCenter.x + overlaySize.width / 2.f,
-                                  markerCenter.y - overlaySize.height / 2.f));
-  overlayPoints.push_back(Point2f(markerCenter.x + overlaySize.width / 2.f,
-                                  markerCenter.y + overlaySize.height / 2.f));
-  overlayPoints.push_back(Point2f(markerCenter.x - overlaySize.width / 2.f,
-                                  markerCenter.y + overlaySize.height / 2.f));
-  // cout << "Overlay points: " << overlayPoints << endl;
+  // vector<Point2f> overlayPoints;
+  // overlayPoints.push_back(Point2f(markerCenter.x - overlaySize.width / 2.f,
+  //                                 markerCenter.y - overlaySize.height
+  //                                 / 2.f));
+  // overlayPoints.push_back(Point2f(markerCenter.x + overlaySize.width / 2.f,
+  //                                 markerCenter.y - overlaySize.height
+  //                                 / 2.f));
+  // overlayPoints.push_back(Point2f(markerCenter.x + overlaySize.width / 2.f,
+  //                                 markerCenter.y + overlaySize.height
+  //                                 / 2.f));
+  // overlayPoints.push_back(Point2f(markerCenter.x - overlaySize.width / 2.f,
+  //                                 markerCenter.y + overlaySize.height
+  //                                 / 2.f));
+  cout << "Overlay points: " << overlayPoints << endl;
 
   // Source corners for overlay image itself
   vector<Point2f> sourcePoints;
@@ -77,6 +83,7 @@ overlayImage(const Mat& src,
   sourcePoints.push_back(Point2f(overlay.cols, 0));
   sourcePoints.push_back(Point2f(overlay.cols, overlay.rows));
   sourcePoints.push_back(Point2f(0, overlay.rows));
+  cout << "Source Points: " << sourcePoints << endl;
 
   // Homography matrix
   Mat homography = getPerspectiveTransform(sourcePoints, overlayPoints);
@@ -146,7 +153,7 @@ detectArucoMarker(Mat& src, Mat& dest, Mat& overlay, Mat& objPoints)
       drawFrameAxes(
         dest, camMatrix, dCoeffs, rvecs[i], tvecs[i], markerSize * 1.5f, 2);
       Size overlaySize(markerCorners[i][0].x * 2, markerCorners[i][0].y * 2);
-      // overlayImage(src, dest, overlay, markerCorners[i], overlaySize);
+      overlayImage(src, dest, overlay, markerCorners[i], overlaySize);
     }
   }
 }
