@@ -1,7 +1,8 @@
 /**
  * Author: Kevin Heleodoro
  * Date: April 3, 2024
- * Purpose: Entrypoint for the Augmented Reality Museum application
+ * Purpose: Entrypoint for the Augmented Reality Museum application. This
+ * program uses OpenCV to detect an ArUco marker and overlay an image to it.
  */
 
 #include <iostream>
@@ -46,36 +47,19 @@ void
 overlayImage(const Mat& src,
              Mat& dest,
              const Mat& overlay,
-             const vector<Point2f>& points,
-             const Size& overlaySize)
+             const vector<Point2f>& markerCorners,
+             const Size& overlaySize,
+             const Vec3d& rvec,
+             const Vec3d& tvec,
+             const Mat& camMatrix,
+             const Mat& dCoeffs)
 {
   // Center of ArUco Marker
   Point2f markerCenter = Point2f(0.f, 0.f);
-  vector<Point2f> overlayPoints;
-  for (const auto& point : points) {
-    cout << "adding " << point << "to markerCenter " << markerCenter << endl;
+  for (const auto& point : markerCorners) {
     markerCenter += point;
-    overlayPoints.push_back(point);
   }
-  markerCenter *= (1.f / points.size());
-  cout << "markerCenter: " << markerCenter << endl;
-
-  // Define points where corners of overlay image should be placed after
-  // transform.
-  // vector<Point2f> overlayPoints;
-  // overlayPoints.push_back(Point2f(markerCenter.x - overlaySize.width / 2.f,
-  //                                 markerCenter.y - overlaySize.height
-  //                                 / 2.f));
-  // overlayPoints.push_back(Point2f(markerCenter.x + overlaySize.width / 2.f,
-  //                                 markerCenter.y - overlaySize.height
-  //                                 / 2.f));
-  // overlayPoints.push_back(Point2f(markerCenter.x + overlaySize.width / 2.f,
-  //                                 markerCenter.y + overlaySize.height
-  //                                 / 2.f));
-  // overlayPoints.push_back(Point2f(markerCenter.x - overlaySize.width / 2.f,
-  //                                 markerCenter.y + overlaySize.height
-  //                                 / 2.f));
-  cout << "Overlay points: " << overlayPoints << endl;
+  markerCenter *= (1.f / markerCorners.size());
 
   // Source corners for overlay image itself
   vector<Point2f> sourcePoints;
@@ -83,13 +67,9 @@ overlayImage(const Mat& src,
   sourcePoints.push_back(Point2f(overlay.cols, 0));
   sourcePoints.push_back(Point2f(overlay.cols, overlay.rows));
   sourcePoints.push_back(Point2f(0, overlay.rows));
-  cout << "Source Points: " << sourcePoints << endl;
 
   // Homography matrix
-  Mat homography = getPerspectiveTransform(sourcePoints, overlayPoints);
-
-  // cout << "Overlay points size: " << overlayPoints.size() << endl;
-  // cout << "Points size: " << points.size() << endl;
+  Mat homography = getPerspectiveTransform(sourcePoints, markerCorners);
 
   // Wrap overlay to fit video feed
   Mat warpedOverlay;
@@ -100,13 +80,11 @@ overlayImage(const Mat& src,
   vector<Point> overlayPolygon;
 
   // fillConvexPoly is expecting Point type of CV_32S
-  for (const Point2f& p : overlayPoints) {
+  for (const Point2f& p : markerCorners) {
     overlayPolygon.push_back(
       Point(static_cast<int>(p.x), static_cast<int>(p.y)));
   }
   fillConvexPoly(overlayMask, overlayPolygon, Scalar(255));
-  // cout << "overlayMask " << overlayMask.size() << endl;
-  // cout << "overlayPoints " << overlayPoints << endl;
 
   // Invert mask for background
   Mat backgroundMask;
@@ -145,7 +123,8 @@ detectArucoMarker(Mat& src, Mat& dest, Mat& overlay, Mat& objPoints)
                camMatrix,
                dCoeffs,
                rvecs.at(i),
-               tvecs.at(i));
+               tvecs.at(i),
+               true);
     }
     aruco::drawDetectedMarkers(dest, markerCorners, markerIds);
 
@@ -153,7 +132,15 @@ detectArucoMarker(Mat& src, Mat& dest, Mat& overlay, Mat& objPoints)
       drawFrameAxes(
         dest, camMatrix, dCoeffs, rvecs[i], tvecs[i], markerSize * 1.5f, 2);
       Size overlaySize(markerCorners[i][0].x * 2, markerCorners[i][0].y * 2);
-      overlayImage(src, dest, overlay, markerCorners[i], overlaySize);
+      overlayImage(src,
+                   dest,
+                   overlay,
+                   markerCorners[i],
+                   overlaySize,
+                   rvecs[i],
+                   tvecs[i],
+                   camMatrix,
+                   dCoeffs);
     }
   }
 }

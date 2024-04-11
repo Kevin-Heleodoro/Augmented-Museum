@@ -159,13 +159,24 @@ Available parameters:
 -   ArUco markers can be detected by the application. Pose estimation calculated and frame axes drawn on the center of the marker.
     ![](img/README/aruco_detected_1.png)
 
--   [ ] Placing image over ArUco Marker
+-   [x] Placing image over ArUco Marker
 
 -   Test image can be placed over ArUco marker. However the image sizing needs to be adjusted. The left border also sticks to the edge of the frame.
     ![](img/README/overlay_aruco_1.png)
 
 -   I was incorrectly calculating new marker corners instead of using the known marker corners that were gathered during detection. Overlay image now covers ArUco marker and rotates/translates along with it.
     ![](img/README/overlay_aruco_2.png)
+
+-   [ ] I want to paste the overlay image using the first ArUco marker corner while maintaining the original size of the image. The overlay should still rotate and translate with the ArUco marker, it will just be bigger.
+
+    -   First attempt was able to match the first corners but the translation/rotation does not happen as expected. With this attempt I was using the difference between the starting points and the overlay's rows and columns. This did not account for the 3rd dimension translations.
+        ![](img/README/overlay_aruco_3.png)
+
+-   [ ] Application stops rendering overlay if the ArUco marker moves too quickly within the frame.
+
+    -   Using `SOLVEPNP_ITERATIVE` which is faster at the expense of accuracy. Provides negligible differences to the eye.
+
+-   [ ] Allow user to cycle through images.
 
 See the [open issues](https://github.com/Kevin-Heleodoro/Augmented-Museum/issues) for a full list of proposed features (and known issues). -->
 
