@@ -124,7 +124,7 @@ make
 ## Usage
 
 1.  To compile the project using the `makefile` simply execute the `make` command with no parameters at the root of the project.
-2.  To run the program execute `./main.exe`
+2.  To run the program execute `./bin/main.exe`
 
 ```sh
 Available parameters:
@@ -156,21 +156,29 @@ Available parameters:
 
 -   [x] ArUco Marker detection
 
--   ArUco markers can be detected by the application. Pose estimation calculated and frame axes drawn on the center of the marker.
-    ![](img/README/aruco_detected_1.png)
+    -   ArUco markers can be detected by the application. Pose estimation calculated and frame axes drawn on the center of the marker.
+        ![](img/README/aruco_detected_1.png)
 
 -   [x] Placing image over ArUco Marker
 
--   Test image can be placed over ArUco marker. However the image sizing needs to be adjusted. The left border also sticks to the edge of the frame.
-    ![](img/README/overlay_aruco_1.png)
+    -   Test image can be placed over ArUco marker. However the image sizing needs to be adjusted. The left border also sticks to the edge of the frame.
+        ![](img/README/overlay_aruco_1.png)
 
--   I was incorrectly calculating new marker corners instead of using the known marker corners that were gathered during detection. Overlay image now covers ArUco marker and rotates/translates along with it.
-    ![](img/README/overlay_aruco_2.png)
+    -   I was incorrectly calculating new marker corners instead of using the known marker corners that were gathered during detection. Overlay image now covers ArUco marker and rotates/translates along with it.
+        ![](img/README/overlay_aruco_2.png)
 
--   [ ] I want to paste the overlay image using the first ArUco marker corner while maintaining the original size of the image. The overlay should still rotate and translate with the ArUco marker, it will just be bigger.
+-   [x] I want to paste the overlay image using the first ArUco marker corner while maintaining the original size of the image. The overlay should still rotate and translate with the ArUco marker, it will just be bigger.
 
     -   First attempt was able to match the first corners but the translation/rotation does not happen as expected. With this attempt I was using the difference between the starting points and the overlay's rows and columns. This did not account for the 3rd dimension translations.
         ![](img/README/overlay_aruco_3.png)
+
+    -   Was able to get the image to overlay in a large format relative to the aruco marker and maintaining its original aspect ratio. However, it was not completely stable at certain angles.
+        ![](img/README/overlay_aruco_4.png)
+        ![](img/README/overlay_aruco_5.png)
+
+    -   Using a 560x720 frame I was able to overlay the image onto a marker.
+        ![](img/README/overlay_aruco_6.png)
+        ![](img/README/overlay_aruco_7.png)
 
 -   [ ] Application stops rendering overlay if the ArUco marker moves too quickly within the frame.
 

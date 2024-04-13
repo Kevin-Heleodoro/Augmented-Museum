@@ -44,58 +44,52 @@ configureParser(cli::Parser& parser)
  * @brief Overlay a painting onto an ArUco marker
  */
 void
-overlayImage(const Mat& src,
-             Mat& dest,
-             const Mat& overlay,
-             const vector<Point2f>& markerCorners,
-             const Size& overlaySize,
-             const Vec3d& rvec,
-             const Vec3d& tvec,
-             const Mat& camMatrix,
-             const Mat& dCoeffs)
+overlayImage2(const Mat& src,
+              Mat& dest,
+              const Mat& overlay,
+              const vector<Point2f>& markerCorners,
+              const Vec3d& rvec,
+              const Vec3d& tvec,
+              const Mat& camMatrix,
+              const Mat& dCoeffs)
 {
-  // Center of ArUco Marker
-  Point2f markerCenter = Point2f(0.f, 0.f);
-  for (const auto& point : markerCorners) {
-    markerCenter += point;
+  vector<Point3f> objectPoints = { Point3f(-overlay.cols, overlay.rows, 0),
+                                   Point3f(overlay.cols, overlay.rows, 0),
+                                   Point3f(overlay.cols, -overlay.rows, 0),
+                                   Point3f(-overlay.cols, -overlay.rows, 0) };
+
+  vector<Point2f> imagePoints;
+  projectPoints(objectPoints, rvec, tvec, camMatrix, dCoeffs, imagePoints);
+
+  vector<Point2f> overlayPoints = { Point2f(0, 0),
+                                    Point2f(overlay.cols, 0),
+                                    Point2f(overlay.cols, overlay.rows),
+                                    Point2f(0, overlay.rows) };
+  Mat homography = findHomography(overlayPoints, imagePoints);
+  if (homography.empty()) {
+    cerr << "Failed to compute homography matrix." << endl;
+    return;
   }
-  markerCenter *= (1.f / markerCorners.size());
 
-  // Source corners for overlay image itself
-  vector<Point2f> sourcePoints;
-  sourcePoints.push_back(Point2f(0, 0));
-  sourcePoints.push_back(Point2f(overlay.cols, 0));
-  sourcePoints.push_back(Point2f(overlay.cols, overlay.rows));
-  sourcePoints.push_back(Point2f(0, overlay.rows));
-
-  // Homography matrix
-  Mat homography = getPerspectiveTransform(sourcePoints, markerCorners);
-
-  // Wrap overlay to fit video feed
   Mat warpedOverlay;
-  warpPerspective(overlay, warpedOverlay, homography, dest.size());
+  warpPerspective(overlay, warpedOverlay, homography, src.size());
 
-  // Mask for overlay image
-  Mat overlayMask = Mat::zeros(dest.size(), CV_8UC1);
+  Mat overlayMask = Mat::zeros(src.size(), CV_8UC1);
   vector<Point> overlayPolygon;
-
-  // fillConvexPoly is expecting Point type of CV_32S
-  for (const Point2f& p : markerCorners) {
+  for (const Point2f& p : imagePoints) {
     overlayPolygon.push_back(
       Point(static_cast<int>(p.x), static_cast<int>(p.y)));
   }
-  fillConvexPoly(overlayMask, overlayPolygon, Scalar(255));
+  fillConvexPoly(
+    overlayMask, overlayPolygon.data(), overlayPolygon.size(), Scalar(255));
 
-  // Invert mask for background
   Mat backgroundMask;
   bitwise_not(overlayMask, backgroundMask);
 
-  // Prepare background and overlay for merge
   Mat background;
   src.copyTo(background, backgroundMask);
-  warpedOverlay.copyTo(warpedOverlay, overlayMask);
+  bitwise_and(warpedOverlay, warpedOverlay, overlayMask);
 
-  // Merge background and overlay
   add(background, warpedOverlay, dest);
 }
 
@@ -124,23 +118,17 @@ detectArucoMarker(Mat& src, Mat& dest, Mat& overlay, Mat& objPoints)
                dCoeffs,
                rvecs.at(i),
                tvecs.at(i),
-               true);
-    }
-    aruco::drawDetectedMarkers(dest, markerCorners, markerIds);
-
-    for (unsigned int i = 0; i < markerIds.size(); i++) {
+               SOLVEPNP_ITERATIVE);
       drawFrameAxes(
-        dest, camMatrix, dCoeffs, rvecs[i], tvecs[i], markerSize * 1.5f, 2);
-      Size overlaySize(markerCorners[i][0].x * 2, markerCorners[i][0].y * 2);
-      overlayImage(src,
-                   dest,
-                   overlay,
-                   markerCorners[i],
-                   overlaySize,
-                   rvecs[i],
-                   tvecs[i],
-                   camMatrix,
-                   dCoeffs);
+        dest, camMatrix, dCoeffs, rvecs[i], tvecs[i], markerSize * 0.5f);
+      overlayImage2(src,
+                    dest,
+                    overlay,
+                    markerCorners[i],
+                    rvecs[i],
+                    tvecs[i],
+                    camMatrix,
+                    dCoeffs);
     }
   }
 }
@@ -185,6 +173,7 @@ main(int argc, char* argv[])
 
   auto printMarker = parser.get<bool>("a");
   if (printMarker) {
+    srand(time(NULL));
     int random = 1 + (rand() % 250);
     ar_utils::createArucoMarker(random);
   }
@@ -194,9 +183,14 @@ main(int argc, char* argv[])
   Mat overlay, image;
   try {
     image = cv::imread("bin/paintings/image_1.jpg");
+    if (image.empty()) {
+      cerr << "Failed to load image." << endl;
+      return -1;
+    }
     cout << "Overlay size: " << image.size() << endl;
-    double aspectRatio = (double)200 / image.cols;
-    resize(image, overlay, Size(), aspectRatio, aspectRatio, INTER_LINEAR);
+    double aspectX = (double)560 / image.cols;
+    double aspectY = (double)720 / image.rows;
+    resize(image, overlay, Size(), aspectX, aspectY, INTER_LINEAR);
     cout << "Overlay resized: " << overlay.size() << endl;
   } catch (const Exception& e) {
     cerr << e.what() << endl;
@@ -216,11 +210,9 @@ main(int argc, char* argv[])
 
   ar_utils::printBorder();
 
-  // while (true) {
   while (cap.grab()) {
     Mat frame, frameCopy;
     cap.retrieve(frame);
-    // cap >> frame;
     frame.copyTo(frameCopy);
 
     detectArucoMarker(frame, frameCopy, overlay, objPoints);
@@ -229,7 +221,6 @@ main(int argc, char* argv[])
 
     char key = (char)waitKey(10);
     if (key == 'q') {
-      ar_utils::printBorder();
       cout << "User terminated program" << endl;
       break;
     }

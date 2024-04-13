@@ -22,7 +22,6 @@ build/
 opencv/build/
 
 # IDE specific files
-.vscode/
 .idea/
 *.sln
 *.vcxproj
