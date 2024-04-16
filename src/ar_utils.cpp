@@ -5,6 +5,7 @@
  */
 
 #include <ctime>
+#include <filesystem>
 #include <iostream>
 #include <opencv2/aruco.hpp>
 #include <opencv2/opencv.hpp>
@@ -13,6 +14,8 @@
 
 using namespace std;
 using namespace cv;
+
+namespace fs = std::__fs::filesystem;
 
 namespace ar_utils {
 
@@ -120,6 +123,65 @@ screenshot(Mat& frame)
 
   imwrite(filename, frame);
   cout << "Screenshot saved! " << filename << endl;
+}
+
+/**
+ * @brief Load images from a given directory into an array
+ */
+vector<Mat>
+loadImagesFromDirectory(string path)
+{
+  printBorder();
+  cout << "Loading images from " << path << endl;
+  vector<Mat> images;
+
+  for (const auto& file : fs::directory_iterator(path)) {
+    try {
+      Mat image = imread(file.path().string());
+      Mat overlay;
+      if (image.empty()) {
+        cerr << "Failed to load image." << endl;
+        continue;
+      }
+
+      cout << "Overlay size: " << image.size() << endl;
+      double aspectX = (double)560 / image.cols;
+      double aspectY = (double)720 / image.rows;
+      resize(image, overlay, Size(), aspectX, aspectY, INTER_LINEAR);
+      cout << "Overlay resized: " << overlay.size() << endl;
+      images.push_back(overlay);
+
+    } catch (const Exception& e) {
+      cerr << e.what() << endl;
+    }
+  }
+
+  cout << "Loaded " << images.size() << "images" << endl;
+  return images;
+}
+
+/**
+ * @brief Set the coordinates for the ArUco marker
+ */
+Mat
+setCoordinateSystem(int markerSize)
+{
+  printBorder();
+  cout << "Setting coordinate system for ArUco marker size " << markerSize
+       << endl;
+
+  int markerLength = 200;
+  Mat objPoints(4, 1, CV_32FC3);
+
+  objPoints.ptr<Vec3f>(0)[0] =
+    Vec3f(-markerLength / 2.f, markerLength / 2.f, 0);
+  objPoints.ptr<Vec3f>(0)[1] = Vec3f(markerLength / 2.f, markerLength / 2.f, 0);
+  objPoints.ptr<Vec3f>(0)[2] =
+    Vec3f(markerLength / 2.f, -markerLength / 2.f, 0);
+  objPoints.ptr<Vec3f>(0)[3] =
+    Vec3f(-markerLength / 2.f, -markerLength / 2.f, 0);
+
+  return objPoints;
 }
 
 }

@@ -5,18 +5,25 @@
  * program uses OpenCV to detect an ArUco marker and overlay an image to it.
  */
 
+#include <filesystem>
 #include <iostream>
 #include <opencv2/aruco.hpp>
 #include <opencv2/opencv.hpp>
 
 #include "../include/ar_utils.h"
 #include "../include/cmdparser.hpp"
+// #include <ar_utils.h>
 
 using namespace std;
 using namespace cv;
 
+namespace fs = std::__fs::filesystem;
+
 Mat camMatrix, dCoeffs;
 vector<Mat> rotationVectors, translationVectors;
+vector<Mat> images;
+
+// static vector<int, Mat> arucoImagePairs;
 
 /**
  * @brief Configures the parameters being passed in through the command line.
@@ -27,8 +34,8 @@ configureParser(cli::Parser& parser)
   parser.set_optional<string>(
     "p",
     "path",
-    "./paintings",
-    "Set path for directory containing images. Defaults to ./paintings "
+    "bin/paintings",
+    "Set path for directory containing images. Defaults to bin/paintings "
     "directory which contains a handful of assorted artworks.");
 
   parser.set_optional<string>("c",
@@ -39,6 +46,38 @@ configureParser(cli::Parser& parser)
   parser.set_optional<bool>(
     "a", "aruco", false, "If true, creates an ArUco marker and saves it");
 }
+
+// vector<Mat>
+// loadImagesFromDirectory(const string& path)
+// {
+//   ar_utils::printBorder();
+//   cout << "Loading images from " << path << endl;
+//   vector<Mat> images;
+
+//   for (const auto& file : fs::directory_iterator(path)) {
+//     try {
+//       Mat image = imread(file.path().string());
+//       Mat overlay;
+//       if (image.empty()) {
+//         cerr << "Failed to load image." << endl;
+//         continue;
+//       }
+
+//       cout << "Overlay size: " << image.size() << endl;
+//       double aspectX = (double)560 / image.cols;
+//       double aspectY = (double)720 / image.rows;
+//       resize(image, overlay, Size(), aspectX, aspectY, INTER_LINEAR);
+//       cout << "Overlay resized: " << overlay.size() << endl;
+//       images.push_back(overlay);
+
+//     } catch (const Exception& e) {
+//       cerr << e.what() << endl;
+//     }
+//   }
+
+//   cout << "Loaded " << images.size() << "images" << endl;
+//   return images;
+// }
 
 /**
  * @brief Overlay a painting onto an ArUco marker
@@ -94,14 +133,14 @@ overlayImage2(const Mat& src,
 }
 
 void
-detectArucoMarker(Mat& src, Mat& dest, Mat& overlay, Mat& objPoints)
+detectArucoMarker2(Mat& src, Mat& dest, Mat& overlay, Mat& objPoints)
 {
   int markerSize = 200;
-  aruco::Dictionary dictionary =
-    aruco::getPredefinedDictionary(aruco::DICT_6X6_250);
-
   vector<int> markerIds;
   vector<vector<Point2f>> markerCorners, rejectedCandidates;
+
+  aruco::Dictionary dictionary =
+    aruco::getPredefinedDictionary(aruco::DICT_6X6_250);
   aruco::DetectorParameters detectorParams = aruco::DetectorParameters();
   aruco::ArucoDetector detector(dictionary, detectorParams);
 
@@ -133,6 +172,46 @@ detectArucoMarker(Mat& src, Mat& dest, Mat& overlay, Mat& objPoints)
   }
 }
 
+// void
+// detectArucoMarker(Mat& src, Mat& dest, Mat& overlay, Mat& objPoints)
+// {
+//   int markerSize = 200;
+//   aruco::Dictionary dictionary =
+//     aruco::getPredefinedDictionary(aruco::DICT_6X6_250);
+
+//   vector<int> markerIds;
+//   vector<vector<Point2f>> markerCorners, rejectedCandidates;
+//   aruco::DetectorParameters detectorParams = aruco::DetectorParameters();
+//   aruco::ArucoDetector detector(dictionary, detectorParams);
+
+//   detector.detectMarkers(src, markerCorners, markerIds);
+//   size_t nMarkers = markerCorners.size();
+//   vector<Vec3d> rvecs(nMarkers), tvecs(nMarkers);
+
+//   if (!markerIds.empty()) {
+
+//     for (size_t i = 0; i < nMarkers; i++) {
+//       solvePnP(objPoints,
+//                markerCorners.at(i),
+//                camMatrix,
+//                dCoeffs,
+//                rvecs.at(i),
+//                tvecs.at(i),
+//                SOLVEPNP_ITERATIVE);
+//       drawFrameAxes(
+//         dest, camMatrix, dCoeffs, rvecs[i], tvecs[i], markerSize * 0.5f);
+//       overlayImage2(src,
+//                     dest,
+//                     overlay,
+//                     markerCorners[i],
+//                     rvecs[i],
+//                     tvecs[i],
+//                     camMatrix,
+//                     dCoeffs);
+//     }
+//   }
+// }
+
 /**
  * @brief The main loop of the code which will turn the camera on, attempt to
  * read ArUco markers and display images when a marker is found.
@@ -149,9 +228,6 @@ main(int argc, char* argv[])
 
   cout << "Command line arguments successfully parsed..." << endl;
   ar_utils::printBorder();
-
-  auto path = parser.get<string>("p");
-  cout << "Path to images: " << path << endl;
 
   VideoCapture cap(0);
   if (!cap.isOpened()) {
@@ -180,33 +256,27 @@ main(int argc, char* argv[])
 
   namedWindow("Main Window", WINDOW_AUTOSIZE);
 
-  Mat overlay, image;
-  try {
-    image = cv::imread("bin/paintings/image_1.jpg");
-    if (image.empty()) {
-      cerr << "Failed to load image." << endl;
-      return -1;
-    }
-    cout << "Overlay size: " << image.size() << endl;
-    double aspectX = (double)560 / image.cols;
-    double aspectY = (double)720 / image.rows;
-    resize(image, overlay, Size(), aspectX, aspectY, INTER_LINEAR);
-    cout << "Overlay resized: " << overlay.size() << endl;
-  } catch (const Exception& e) {
-    cerr << e.what() << endl;
+  auto path = parser.get<string>("p");
+  vector<Mat> images = ar_utils::loadImagesFromDirectory(path);
+  if (images.empty()) {
+    cerr << "Unable to load images" << endl;
     return -1;
   }
 
+  int currentImageIndex = 0;
+  Mat overlay = images[currentImageIndex];
+
   // set coordinate system
   int markerLength = 200;
-  Mat objPoints(4, 1, CV_32FC3);
-  objPoints.ptr<Vec3f>(0)[0] =
-    Vec3f(-markerLength / 2.f, markerLength / 2.f, 0);
-  objPoints.ptr<Vec3f>(0)[1] = Vec3f(markerLength / 2.f, markerLength / 2.f, 0);
-  objPoints.ptr<Vec3f>(0)[2] =
-    Vec3f(markerLength / 2.f, -markerLength / 2.f, 0);
-  objPoints.ptr<Vec3f>(0)[3] =
-    Vec3f(-markerLength / 2.f, -markerLength / 2.f, 0);
+  Mat objPoints = ar_utils::setCoordinateSystem(markerLength);
+  // Mat objPoints(4, 1, CV_32FC3);
+  // objPoints.ptr<Vec3f>(0)[0] =
+  //   Vec3f(-markerLength / 2.f, markerLength / 2.f, 0);
+  // objPoints.ptr<Vec3f>(0)[1] = Vec3f(markerLength / 2.f, markerLength / 2.f,
+  // 0); objPoints.ptr<Vec3f>(0)[2] =
+  //   Vec3f(markerLength / 2.f, -markerLength / 2.f, 0);
+  // objPoints.ptr<Vec3f>(0)[3] =
+  //   Vec3f(-markerLength / 2.f, -markerLength / 2.f, 0);
 
   ar_utils::printBorder();
 
@@ -215,7 +285,7 @@ main(int argc, char* argv[])
     cap.retrieve(frame);
     frame.copyTo(frameCopy);
 
-    detectArucoMarker(frame, frameCopy, overlay, objPoints);
+    detectArucoMarker2(frame, frameCopy, overlay, objPoints);
 
     imshow("Main Window", frameCopy);
 
@@ -224,9 +294,30 @@ main(int argc, char* argv[])
       cout << "User terminated program" << endl;
       break;
     }
-    if (key == 's') {
+
+    else if (key == 's') {
       ar_utils::printBorder();
       ar_utils::screenshot(frameCopy);
+    }
+
+    else if (key == 'a') { // Left arrow
+      if (currentImageIndex > 0) {
+        currentImageIndex--;
+        overlay = images[currentImageIndex];
+      } else {
+        currentImageIndex = images.size() - 1;
+        overlay = images[currentImageIndex];
+      }
+    }
+
+    else if (key == 'd') { // Right arrow
+      if (currentImageIndex < images.size() - 1) {
+        currentImageIndex++;
+        overlay = images[currentImageIndex];
+      } else {
+        currentImageIndex = 0;
+        overlay = images[currentImageIndex];
+      }
     }
   }
 

@@ -33,6 +33,18 @@ printBorder();
  */
 void
 screenshot(cv::Mat& frame);
+
+/**
+ * @brief Load images from a given directory into a vector of Mats
+ */
+std::vector<cv::Mat>
+loadImagesFromDirectory(std::string path);
+
+/**
+ * @brief Set the coordinates for the ArUco marker
+ */
+cv::Mat
+setCoordinateSystem(int markerSize);
 }
 
 #endif

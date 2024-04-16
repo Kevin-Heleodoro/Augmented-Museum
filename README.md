@@ -183,8 +183,11 @@ Available parameters:
 -   [ ] Application stops rendering overlay if the ArUco marker moves too quickly within the frame.
 
     -   Using `SOLVEPNP_ITERATIVE` which is faster at the expense of accuracy. Provides negligible differences to the eye.
+    -   Storing the last known position of the overlay if detector disappears briefly.
+        -   This caused a lot of movement in the image and left a transparent ghost of the overlay frozen
 
--   [ ] Allow user to cycle through images.
+-   [x] Allow user to cycle through images.
+    -   User can select a directory containing images that will be loaded into the program. Using the `a` and `d` keys will allow the user to cycle through them.
 
 See the [open issues](https://github.com/Kevin-Heleodoro/Augmented-Museum/issues) for a full list of proposed features (and known issues). -->
 
