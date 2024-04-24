@@ -1,3 +1,9 @@
+/**
+ * Author: Kevin Heleodoro
+ * Date: April 3, 2024
+ * Purpose: Provide utilities to the main functionality of the application
+ */
+
 #include <opencv2/aruco.hpp>
 #include <opencv2/opencv.hpp>
 
@@ -15,7 +21,7 @@ createArucoMarker(int markerId);
 /**
  * @brief Loads the camera parameters found in filePath to calibrate the camera
  */
-void
+int
 loadCalibrationFile(std::string filePath,
                     cv::Mat& camMatrix,
                     cv::Mat& dCoeffs,

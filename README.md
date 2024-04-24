@@ -134,8 +134,8 @@ Available parameters:
    This parameter is optional. The default value is ''.
 
   -p	--path
-   Set path for directory containing images. Defaults to ./paintings directory which contains a handful of assorted artworks.
-   This parameter is optional. The default value is './paintings'.
+   Set path for directory containing images. Defaults to bin/paintings directory which contains a handful of assorted artworks.
+   This parameter is optional. The default value is 'bin/paintings'.
 
   -c	--calibration
    Path to camera calibration file
@@ -176,7 +176,7 @@ Available parameters:
         ![](img/README/overlay_aruco_4.png)
         ![](img/README/overlay_aruco_5.png)
 
-    -   Using a 560x720 frame I was able to overlay the image onto a marker.
+    -   Using a 560x720 frame I was able to overlay the image onto a marker. (Marker located on bookshelf)
         ![](img/README/overlay_aruco_6.png)
         ![](img/README/overlay_aruco_7.png)
 
@@ -187,7 +187,28 @@ Available parameters:
         -   This caused a lot of movement in the image and left a transparent ghost of the overlay frozen
 
 -   [x] Allow user to cycle through images.
+
     -   User can select a directory containing images that will be loaded into the program. Using the `a` and `d` keys will allow the user to cycle through them.
+
+-   [ ] User can display multiple images at a given time on different ArUco markers.
+
+    -   First test of displaying multiple images completed. Need to make the necessary adjustments from previous step to ensure images are the correct size.
+        ![](img/README/overlay_multi_1.png)
+
+-   [ ] Clicking on an image will display some metadata in a pop up.
+-   [ ] Users can dynamically resize the image in real time.
+-   [ ] Users can assign an image to a particular marker.
+-
+
+<!-- Look into these resources: -->
+<!-- https://medium.com/@saicoumar/how-to-use-a-smartphone-as-a-webcam-with-opencv-b68773db9ddd -->
+<!-- https://repositorio.ipl.pt/bitstream/10400.21/11935/1/Marker-based%20augmented%20reality%20application%20formobile%20learning%20in%20an%20urban%20parksiie-cied_2017_atas.pdf -->
+<!-- https://www.researchgate.net/profile/J-Angel-Velazquez-Iturbide/publication/358011320_Augmented_Reality_and_Engineering_Education_A_Systematic_Review/links/629bf0fc6886635d5cbfd1c0/Augmented-Reality-and-Engineering-Education-A-Systematic-Review.pdf -->
+<!-- https://www.researchgate.net/publication/340458084_The_Use_of_Marker-Based_Augmented_Reality_in_Space_Measurement -->
+<!-- https://iopscience.iop.org/article/10.1088/1757-899X/767/1/012062 -->
+<!-- https://iopscience.iop.org/article/10.1088/2631-8695/ac1fc7/meta -->
+<!-- https://www.eneuro.org/content/11/3/ENEURO.0500-23.2024 -->
+<!-- https://core.ac.uk/download/pdf/82180464.pdf -->
 
 See the [open issues](https://github.com/Kevin-Heleodoro/Augmented-Museum/issues) for a full list of proposed features (and known issues). -->
 
@@ -236,6 +257,7 @@ Project Link: [https://github.com/Kevin-Heleodoro/Augmented-Museum](https://gith
 
 -   [Best Artwork of All Time Dataset](https://www.kaggle.com/datasets/ikarus777/best-artworks-of-all-time?resource=download-directory&select=resized)
 -   [CmdParser Library](https://github.com/FlorianRappl/CmdParser)
+-   [Augmented Reality — Television with Aruco Markers, OpenCV, Python & C++](https://kediarahul.medium.com/augmented-reality-television-with-aruco-markers-opencv-python-c-c81823fbff54)
 <!-- -   [Blender](https://www.blender.org/features/) -->
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>

@@ -41,7 +41,7 @@ createArucoMarker(int markerId)
 /**
  * @brief loads the camera parameters found in filePath to calibrate the camera
  */
-void
+int
 loadCalibrationFile(string filePath,
                     Mat& camMatrix,
                     Mat& dCoeffs,
@@ -55,18 +55,24 @@ loadCalibrationFile(string filePath,
     fs.open(filePath, FileStorage::READ);
   } catch (const Exception& e) {
     cerr << "Failed to open calibration file: " << e.what() << endl;
-    return;
+    return -1;
   }
 
-  fs["camera_matrix"] >> camMatrix;
-  fs["dist_coeffs"] >> dCoeffs;
+  try {
 
-  rotationVectors.clear();
-  FileNode rvecNode = fs["rotation_vectors"];
-  for (FileNodeIterator n = rvecNode.begin(); n != rvecNode.end(); ++n) {
-    Mat tmp;
-    *n >> tmp;
-    rotationVectors.push_back(tmp);
+    fs["camera_matrix"] >> camMatrix;
+    fs["dist_coeffs"] >> dCoeffs;
+
+    rotationVectors.clear();
+    FileNode rvecNode = fs["rotation_vectors"];
+    for (FileNodeIterator n = rvecNode.begin(); n != rvecNode.end(); ++n) {
+      Mat tmp;
+      *n >> tmp;
+      rotationVectors.push_back(tmp);
+    }
+  } catch (const Exception& e) {
+    cerr << "Error loading calibration file: " << e.what() << endl;
+    return -1;
   }
 
   fs.release();
@@ -77,6 +83,8 @@ loadCalibrationFile(string filePath,
   cout << "Rotation Vectors: " << rotationVectors.size() << endl;
   cout << "Translation Vectors: " << translationVectors.size() << endl;
   cout << "Finished loading ..." << endl;
+
+  return 0;
 }
 
 /**
@@ -140,15 +148,14 @@ loadImagesFromDirectory(string path)
       Mat image = imread(file.path().string());
       Mat overlay;
       if (image.empty()) {
-        cerr << "Failed to load image." << endl;
+        cerr << "Failed to load image: " << file.path().string() << endl;
         continue;
       }
 
-      cout << "Overlay size: " << image.size() << endl;
       double aspectX = (double)560 / image.cols;
       double aspectY = (double)720 / image.rows;
       resize(image, overlay, Size(), aspectX, aspectY, INTER_LINEAR);
-      cout << "Overlay resized: " << overlay.size() << endl;
+      cout << "Loaded image: " << file.path().string() << endl;
       images.push_back(overlay);
 
     } catch (const Exception& e) {
@@ -156,7 +163,12 @@ loadImagesFromDirectory(string path)
     }
   }
 
-  cout << "Loaded " << images.size() << "images" << endl;
+  if (images.empty()) {
+    cerr << "Unable to load images" << endl;
+    return images;
+  }
+
+  cout << "Number of images loaded:  " << images.size() << endl;
   return images;
 }
 
