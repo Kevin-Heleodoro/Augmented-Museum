@@ -3,13 +3,6 @@
 <a name="readme-top"></a>
 
 <!-- PROJECT SHIELDS -->
-<!--
-*** I'm using markdown "reference style" links for readability.
-*** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
-*** See the bottom of this document for the declaration of the reference variables
-*** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
-*** https://www.markdownguide.org/basic-syntax/#reference-style-links
--->
 
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
@@ -75,18 +68,17 @@
 
 The idea of this project is to give a user the ability to create a virtual museum in whatever physical space they have (home, office, etc.). The goal is to create framed paintings/photos to be "hung" on a wall as one would normally do.
 
+Presentation video and demo can be found [here](https://github.com/Kevin-Heleodoro/Augmented-Museum/blob/main/CS%205330%20Video.mp4)!
+
+IEEE Conference Write up can be found [here](https://github.com/Kevin-Heleodoro/Augmented-Museum/blob/main/Augment_Museum_Heleodoro.pdf)
+
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ### Built With
 
-<!-- -   [![Next][Next.js]][Next-url]
--   [![React][React.js]][React-url]
--   [![Vue][Vue.js]][Vue-url]
--   [![Angular][Angular.io]][Angular-url]
--   [![Svelte][Svelte.dev]][Svelte-url]
--   [![Laravel][Laravel.com]][Laravel-url]
--   [![Bootstrap][Bootstrap.com]][Bootstrap-url]
--   [![JQuery][JQuery.com]][JQuery-url] -->
+-   [C++](https://cplusplus.com/)
+-   [OpenCV](https://opencv.org/)
+-   [CmdParser Library](https://github.com/FlorianRappl/CmdParser)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -198,17 +190,6 @@ Available parameters:
 -   [ ] Clicking on an image will display some metadata in a pop up.
 -   [ ] Users can dynamically resize the image in real time.
 -   [ ] Users can assign an image to a particular marker.
--
-
-<!-- Look into these resources: -->
-<!-- https://medium.com/@saicoumar/how-to-use-a-smartphone-as-a-webcam-with-opencv-b68773db9ddd -->
-<!-- https://repositorio.ipl.pt/bitstream/10400.21/11935/1/Marker-based%20augmented%20reality%20application%20formobile%20learning%20in%20an%20urban%20parksiie-cied_2017_atas.pdf -->
-<!-- https://www.researchgate.net/profile/J-Angel-Velazquez-Iturbide/publication/358011320_Augmented_Reality_and_Engineering_Education_A_Systematic_Review/links/629bf0fc6886635d5cbfd1c0/Augmented-Reality-and-Engineering-Education-A-Systematic-Review.pdf -->
-<!-- https://www.researchgate.net/publication/340458084_The_Use_of_Marker-Based_Augmented_Reality_in_Space_Measurement -->
-<!-- https://iopscience.iop.org/article/10.1088/1757-899X/767/1/012062 -->
-<!-- https://iopscience.iop.org/article/10.1088/2631-8695/ac1fc7/meta -->
-<!-- https://www.eneuro.org/content/11/3/ENEURO.0500-23.2024 -->
-<!-- https://core.ac.uk/download/pdf/82180464.pdf -->
 
 See the [open issues](https://github.com/Kevin-Heleodoro/Augmented-Museum/issues) for a full list of proposed features (and known issues). -->
 
@@ -255,10 +236,19 @@ Project Link: [https://github.com/Kevin-Heleodoro/Augmented-Museum](https://gith
 
 ## Acknowledgments
 
--   [Best Artwork of All Time Dataset](https://www.kaggle.com/datasets/ikarus777/best-artworks-of-all-time?resource=download-directory&select=resized)
--   [CmdParser Library](https://github.com/FlorianRappl/CmdParser)
--   [Augmented Reality — Television with Aruco Markers, OpenCV, Python & C++](https://kediarahul.medium.com/augmented-reality-television-with-aruco-markers-opencv-python-c-c81823fbff54)
-<!-- -   [Blender](https://www.blender.org/features/) -->
+-   Salin Boonbrahm et al., "The Use of Marker-Based Augmented Reality in Space Measurement," in _Procedia Manufacturing_, vol. 42, pp. 337-343, 2020, doi: [10.1016/j.promfg.2020.02.081](https://doi.org/10.1016/j.promfg.2020.02.081).
+
+-   Rusnida Romli et al., "Mobile Augmented Reality (AR) Marker-based for Indoor Library Navigation," in _IOP Conference Series: Materials Science and Engineering_, vol. 767, 012062, 2020.
+
+-   Tommaso Tocci et al., "ArUco marker-based displacement measurement technique: uncertainty analysis," in _Engineering Research Express_, vol. 3, 035032, 2021.
+
+-   OpenCV Contributors, "Camera Calibration and 3D Reconstruction," 2024, [OpenCV documentation](https://docs.opencv.org/4.x/d9/d0c/group__calib3d.html).
+
+-   OpenCV Contributors, "ArucoDetector Class Reference," 2024, [OpenCV documentation](https://docs.opencv.org/4.x/d2/d1a/classcv_1_1aruco_1_1ArucoDetector.html).
+
+-   Ikarus777, "Best Artworks of All Time," 2024, [Kaggle dataset](https://www.kaggle.com/datasets/ikarus777/best-artworks-of-all-time?resource=download-directory&select=resized).
+
+-   Rahul Kedia, "Augmented Reality Television with ArUco Markers: OpenCV, Python, C++," 2021, [Medium article](https://kediarahul.medium.com/augmented-reality-television-with-aruco-markers-opencv-python-c-c81823fbff54).
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -277,20 +267,3 @@ Project Link: [https://github.com/Kevin-Heleodoro/Augmented-Museum](https://gith
 [license-url]: https://github.com/Kevin-Heleodoro/Augmented-Museum/blob/master/LICENSE.txt
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [linkedin-url]: https://linkedin.com/in/Kevin-Heleodoro
-[product-screenshot]: images/screenshot.png
-[Next.js]: https://img.shields.io/badge/next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white
-[Next-url]: https://nextjs.org/
-[React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
-[React-url]: https://reactjs.org/
-[Vue.js]: https://img.shields.io/badge/Vue.js-35495E?style=for-the-badge&logo=vuedotjs&logoColor=4FC08D
-[Vue-url]: https://vuejs.org/
-[Angular.io]: https://img.shields.io/badge/Angular-DD0031?style=for-the-badge&logo=angular&logoColor=white
-[Angular-url]: https://angular.io/
-[Svelte.dev]: https://img.shields.io/badge/Svelte-4A4A55?style=for-the-badge&logo=svelte&logoColor=FF3E00
-[Svelte-url]: https://svelte.dev/
-[Laravel.com]: https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white
-[Laravel-url]: https://laravel.com
-[Bootstrap.com]: https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white
-[Bootstrap-url]: https://getbootstrap.com
-[JQuery.com]: https://img.shields.io/badge/jQuery-0769AD?style=for-the-badge&logo=jquery&logoColor=white
-[JQuery-url]: https://jquery.com
